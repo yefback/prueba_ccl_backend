@@ -9,6 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
+// Configure CORS for Angular
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200", "http://localhost:4200/")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // Configure Entity Framework Core with PostgreSQL
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -38,18 +49,21 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// Add OpenAPI/Swagger (default in .NET 9 Web API)
-builder.Services.AddOpenApi();
+// Add OpenAPI/Swagger
+// builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    // app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();
+
+// Use CORS
+app.UseCors("AllowFrontend");
 
 // Use Authentication & Authorization
 app.UseAuthentication();

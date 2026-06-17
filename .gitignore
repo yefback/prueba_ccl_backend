@@ -1,0 +1,18 @@
+# Binaries
+bin/
+obj/
+
+# Visual Studio / VS Code
+.vscode/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Environment config that shouldn't be shared (optional but good practice)
+# appsettings.Development.json 
+# (Lo dejamos comentado porque para la prueba técnica suele ser útil que el evaluador lo vea, pero en la vida real se ignora)
+
+# Mac
+.DS_Store
