@@ -54,13 +54,28 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// Poblar la base de datos con datos iniciales si está vacía
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    if (!context.Productos.Any())
+    {
+        context.Productos.AddRange(
+            new PruebaCCL.Backend.Models.Producto { Nombre = "Portátil HP", Cantidad = 10 },
+            new PruebaCCL.Backend.Models.Producto { Nombre = "Mouse Inalámbrico", Cantidad = 50 },
+            new PruebaCCL.Backend.Models.Producto { Nombre = "Teclado Mecánico", Cantidad = 25 },
+            new PruebaCCL.Backend.Models.Producto { Nombre = "Monitor 24 pulgadas", Cantidad = 15 }
+        );
+        context.SaveChanges();
+    }
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     // app.MapOpenApi();
 }
-
-app.UseHttpsRedirection();
+// Evitar redirección a HTTPS en local para no tener problemas con certificados auto-firmados
+// app.UseHttpsRedirection();
 
 // Use CORS
 app.UseCors("AllowFrontend");
